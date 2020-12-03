@@ -13,4 +13,10 @@ public interface PokojRepository {
     Set<Pokoj> znajdzPokoje(Uzytkownik kierownik, Hotel hotel);
 
     Map<Hotel, List<Pokoj>> znajdzOferty(String adres, Date poczatek, Date koniec);
+
+    void dodajPokoj(Pokoj pokoj, Hotel hotel);
+
+    void usunPokoj(Pokoj pokoj);
+
+    void modyfikujPokoj(Pokoj pokoj);
 }

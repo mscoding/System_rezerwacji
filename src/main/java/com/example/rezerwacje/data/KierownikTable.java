@@ -17,7 +17,7 @@ class KierownikTable {
         kierownicy.put(kierownik,new ArrayList<>());
     }
 
-    public void addPracownik(Uzytkownik kierownik, Uzytkownik pracownik){
+    public void addPracownik(Uzytkownik pracownik, Uzytkownik kierownik){
         kierownicy.get(kierownik).add(pracownik);
     }
 
@@ -27,6 +27,14 @@ class KierownikTable {
                 return kierownik;
 
         return null;
+    }
+
+    public List<Uzytkownik> getPracownicy(Uzytkownik kierownik){
+        return kierownicy.get(kierownik);
+    }
+
+    public void usunPracownik(Uzytkownik pracownik, Uzytkownik kierownik){
+        kierownicy.get(kierownik).remove(pracownik);
     }
 
     public static KierownikTable getInstance() {

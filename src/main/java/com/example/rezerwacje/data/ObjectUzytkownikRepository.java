@@ -1,41 +1,68 @@
 package com.example.rezerwacje.data;
 
-import com.example.rezerwacje.hotel.Hotel;
+import com.example.rezerwacje.rezerwacja.Rezerwacja;
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ObjectUzytkownikRepository implements UzytkownikRepository {
     private static ObjectUzytkownikRepository uzytkownik_instance;
-    private static int id=0;
-    private final Map<Integer,Uzytkownik> uzytkownicy = new HashMap<>();
+    private final List<Uzytkownik> uzytkownicy = new ArrayList<>();
 
     public Uzytkownik znajdzUzytkownika(String nazwa){
-        for (Uzytkownik uzytkownik : uzytkownicy.values())
+        for (Uzytkownik uzytkownik : uzytkownicy)
             if (uzytkownik.getNazwa().equals(nazwa))
                 return uzytkownik;
         return null;
     }
 
-    public List<Uzytkownik> znajdzPracownikow(long id){
-        return null;
+    public List<Uzytkownik> znajdzPracownikow(Uzytkownik kierownik){
+
+        return KierownikTable.getInstance().getPracownicy(kierownik);
     }
 
     @Override
     public void addUzytkownik(Uzytkownik uzytkownik) {
-        uzytkownik.setId(id);
         if (uzytkownik.getRola().equals("KIEROWNIK"))
             KierownikTable.getInstance().addKierownik(uzytkownik);
-        uzytkownicy.put(id,uzytkownik);
-        id++;
+        uzytkownicy.add(uzytkownik);
     }
 
     @Override
     public void addPracownik(Uzytkownik pracownik, Uzytkownik kierownik) {
-        KierownikTable.getInstance().addPracownik(kierownik, pracownik);
-        addUzytkownik(pracownik);
+        KierownikTable.getInstance().addPracownik(pracownik, kierownik);
+        uzytkownicy.add(pracownik);
+    }
+
+    @Override
+    public void usunUzytkownika(Uzytkownik uzytkownik) {
+        ObjectRezerwacjaRepository.getInstance().usunUzytkownika(uzytkownik);
+        uzytkownicy.remove(uzytkownik);
+    }
+
+    @Override
+    public void usunPracownika(Uzytkownik pracownik, Uzytkownik kierownik) {
+        KierownikTable.getInstance().usunPracownik(pracownik, kierownik);
+        uzytkownicy.remove(pracownik);
+    }
+
+    @Override
+    public void modyfikujUzytkownik(Uzytkownik uzytkownik) {
+        usunUzytkownika(uzytkownik);
+        List<Rezerwacja> rezerwacje = ObjectRezerwacjaRepository.getInstance().znajdzRezerwacje(uzytkownik);
+        ObjectRezerwacjaRepository.getInstance().usunUzytkownika(uzytkownik);
+        ObjectRezerwacjaRepository.getInstance().dodajUzytkownika(uzytkownik,rezerwacje);
+        addUzytkownik(uzytkownik);
+    }
+
+    @Override
+    public void modyfikujPracownik(Uzytkownik pracownik, Uzytkownik kierownik) {
+        KierownikTable.getInstance().usunPracownik(pracownik, kierownik);
+        KierownikTable.getInstance().addPracownik(pracownik, kierownik);
+        usunPracownika(pracownik, kierownik);
+        addPracownik(pracownik, kierownik);
+
     }
 
     public static ObjectUzytkownikRepository getInstance() {

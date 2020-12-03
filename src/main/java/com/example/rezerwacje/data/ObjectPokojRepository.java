@@ -10,6 +10,7 @@ public class ObjectPokojRepository implements PokojRepository{
     private static ObjectPokojRepository pokoj_instance = null; //todo zmienic na bean
 
     private final Map<Pokoj, Hotel> pokoje = new HashMap<>();
+    private static int id = 0;
 
     public Set<Pokoj> znajdzPokoje(Uzytkownik kierownik, Hotel hotel){
         Set<Pokoj> pokoje1 = new HashSet<>();
@@ -39,6 +40,45 @@ public class ObjectPokojRepository implements PokojRepository{
         }
 
         return oferty;
+    }
+
+    @Override
+    public void dodajPokoj(Pokoj pokoj, Hotel hotel) {
+        pokoj.setId(id++);
+        pokoje.put(pokoj, hotel);
+    }
+
+    //todo ogarniecie rezerwacji
+    @Override
+    public void usunPokoj(Pokoj pokoj) {
+        pokoje.remove(pokoj);
+    }
+
+    //todo ogarniecie rezerwacji
+    @Override
+    public void modyfikujPokoj(Pokoj pokoj) {
+        Pokoj pokojOld=null;
+        Hotel hotel=null;
+        for (Pokoj pokoj1 : pokoje.keySet()){
+            if (pokoj1.getId() == pokoj.getId()){
+                pokojOld=pokoj1;
+                hotel=pokoje.get(pokoj1);
+            }
+        }
+        usunPokoj(pokojOld);
+        dodajPokoj(pokoj,hotel);
+    }
+
+    // modyfikacja/usuwanie hotelu
+    void usunHotel(Hotel hotel){
+        pokoje.entrySet().removeIf(e -> e.getValue().equals(hotel));
+    }
+
+    //modyfikacja hotelu
+    void dodajHotel(Hotel hotel, Set<Pokoj> pokoje1){
+        for (Pokoj pokoj : pokoje1){
+            pokoje.put(pokoj,hotel);
+        }
     }
 
     public static ObjectPokojRepository getInstance() {

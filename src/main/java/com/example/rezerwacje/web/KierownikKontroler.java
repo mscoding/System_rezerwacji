@@ -36,32 +36,14 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Hotel> ekranGlownyHotele(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if(principal instanceof UserDetails){
-            username = ((UserDetails)principal).getUsername();
-        }else{
-            username = principal.toString();
-        }
 
-        Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
-
-        return hotelRepository.znajdzHotele(kierownik);
+        return hotelRepository.znajdzHotele(getKierownik());
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Uzytkownik> ekranGlownyPracownicy(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if(principal instanceof UserDetails){
-            username = ((UserDetails)principal).getUsername();
-        }else{
-            username = principal.toString();
-        }
 
-        Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
-
-        return uzytkownikRepository.znajdzPracownikow(kierownik.getId());
+        return uzytkownikRepository.znajdzPracownikow(getKierownik());
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -73,33 +55,15 @@ public class KierownikKontroler {
 
     @RequestMapping(method = RequestMethod.GET, value = "/hotele")
     public List<Rezerwacja> listaRezerwacji(Hotel hotel){
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String username;
-//        if(principal instanceof UserDetails){
-//            username = ((UserDetails)principal).getUsername();
-//        }else{
-//            username = principal.toString();
-//        }
-//
-//        Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
 
         return rezerwacjaRepository.znajdzRezerwacje(hotel);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/hotele")
     public Set<Pokoj> listaPokoi(Hotel hotel){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if(principal instanceof UserDetails){
-            username = ((UserDetails)principal).getUsername();
-        }else{
-            username = principal.toString();
-        }
-
-        Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
 
         //todo logika wyboru hotelu
-        return pokojRepository.znajdzPokoje(kierownik,hotel);
+        return pokojRepository.znajdzPokoje(getKierownik(),hotel);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/hotel")
@@ -110,53 +74,110 @@ public class KierownikKontroler {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/hotel/submit")
-    public String hotelForm(Model model){
-      //  model.addAttribute(new HotelForm());
+    public String hotelForm(){
         return "hotelForm";
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/hotel/submit")
-    public String przetworzHotelForm(/*@Valid HotelForm hotelForm, BindingResult errors */){
-//        if (errors.hasErrors()) {
-//            return "hotelForm";
-//        }
-//        Hotel hotel = hotelForm.toHotel();
-//        jdbcHotel.dodajHotel(hotel);
+    public String przetworzHotelForm(Hotel hotel){
+        hotelRepository.addHotel(getKierownik(),hotel);
 
         return "redirect:/kierownik";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/pokoj/submit")
-    public String pokojForm(Model model){
-        //  model.addAttribute(new HotelForm());
+    public String pokojForm(){
         return "pokojForm";
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/pokoj/submit")
-    public String przetworzPokojForm(/*@Valid PokojForm pokojForm, BindingResult errors */){
-//        if (errors.hasErrors()) {
-//            return "pokojForm";
-//        }
-//        Pokoj pokoj = pokojForm.toPokoj();
-//        jdbcPokoj.dodajPokoj(pokoj);
+    public String przetworzPokojForm(Pokoj pokoj, Hotel hotel){
+        pokojRepository.dodajPokoj(pokoj,hotel);
 
         return "redirect:/kierownik";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/pracownik/submit")
-    public String pracownikForm(Model model){
-        //  model.addAttribute(new HotelForm());
+    public String pracownikForm(){
         return "pracownikForm";
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/pracownik/submit")
-    public String przetworzPracownikForm(/*@Valid PracownikForm pracownikForm, BindingResult errors */){
-//        if (errors.hasErrors()) {
-//            return "pracownikForm";
-//        }
-//        Pracownik pracownik = pracownikForm.toPracownik();
-//        jdbcUzytkownik.dodajUzytkownika(pracownik);
+    public String przetworzPracownikForm(Uzytkownik pracownik){
+        uzytkownikRepository.addPracownik(pracownik,getKierownik());
 
         return "redirect:/kierownik";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/pracownik/usun")
+    public String usunPracownika(){
+        return "usunPracownika";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/pracownik/usun")
+    public void usunPracownikProcess(Uzytkownik pracownik){
+        uzytkownikRepository.usunPracownika(pracownik,getKierownik());
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/pracownik/modyfikuj")
+    public String modyfikujPracownik(Uzytkownik pracownik){
+        return "modyfikujPracownika";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/pracownik/modyfikuj")
+    public void modyfikujPracownikProcess(Uzytkownik pracownik){
+        uzytkownikRepository.modyfikujPracownik(pracownik,getKierownik());
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/hotel/modyfikuj")
+    public String modyfikujHotel(Hotel hotel){
+        return "modyfikujHotel";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/hotel/modyfikuj")
+    public void modyfikujHotelProcess(Hotel hotel){
+        hotelRepository.modyfikujHotel(hotel);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/hotel/usun")
+    public String usunHotel(Hotel hotel){
+        return "uusnHotel";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/hotel/usun")
+    public void usunHotelProcess(Hotel hotel){
+        hotelRepository.usunHotel(hotel);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/pokoj/modyfikuj")
+    public String modyfikujPokoj(Pokoj pokoj){
+        return "modyfikujPokoj";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/pokoj/modyfikuj")
+    public void modyfikujPokojProcess(Pokoj pokoj){
+        pokojRepository.modyfikujPokoj(pokoj);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/pokoj/usun")
+    public String usunPokoj(Pokoj pokoj){
+        return "usunPokoj";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/pokoj/usun")
+    public void usunPokojProcess(Pokoj pokoj){
+        pokojRepository.usunPokoj(pokoj);
+    }
+
+    private Uzytkownik getKierownik(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if(principal instanceof UserDetails){
+            username = ((UserDetails)principal).getUsername();
+        }else{
+            username = principal.toString();
+        }
+
+        return uzytkownikRepository.znajdzUzytkownika(username);
     }
 }

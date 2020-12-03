@@ -3,6 +3,7 @@ package com.example.rezerwacje.hotel;
 public class Hotel {
     private String nazwa;
     private String adres;
+
     private int id;
 
     public Hotel(String nazwa, String adres) {
@@ -22,6 +23,10 @@ public class Hotel {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getAdres() {

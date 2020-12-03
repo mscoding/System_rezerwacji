@@ -3,7 +3,7 @@ package com.example.rezerwacje.hotel;
 import java.util.Date;
 
 public class Pokoj {
-    private long id;
+    private int id;
     private int nr;
     private int cena;
     private int ocena;
@@ -18,7 +18,7 @@ public class Pokoj {
         this.liczbaOsob = liczbaOsob;
     }
 
-    public Pokoj(long id, int nr, int cena, int ocena, int liczbaOsob) {
+    public Pokoj(int id, int nr, int cena, int ocena, int liczbaOsob) {
         this.id = id;
         this.nr = nr;
         this.cena = cena;
@@ -40,5 +40,13 @@ public class Pokoj {
 
     public void setKoniecRezerwacji(Date koniecRezerwacji) {
         this.koniecRezerwacji = koniecRezerwacji;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

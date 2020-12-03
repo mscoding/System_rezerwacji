@@ -8,6 +8,7 @@ import java.util.*;
 
 public class ObjectHotelRepository implements HotelRepository{
     private static ObjectHotelRepository hotel_instance = null; //todo zmienic na bean
+    private static int id=0;
 
     // hotel, kierownik
     private final Map<Hotel, Uzytkownik> hotele = new HashMap<>();
@@ -30,6 +31,36 @@ public class ObjectHotelRepository implements HotelRepository{
                 return hotel;
         }
         return null;
+    }
+
+    @Override
+    public void addHotel(Uzytkownik kierownik, Hotel hotel) {
+        hotel.setId(id++);
+        hotele.put(hotel,kierownik);
+    }
+
+    //todo ogarniecie rezerwacji
+    @Override
+    public void modyfikujHotel(Hotel hotel) {
+        Hotel hotelOld=null;
+        Uzytkownik uzytkownik=null;
+        for (Hotel hotel1 : hotele.keySet()){
+            if (hotel1.getId()==hotel.getId()) {
+                uzytkownik = hotele.get(hotel1);
+                hotelOld = hotel1;
+            }
+        }
+        Set<Pokoj> pokoje = ObjectPokojRepository.getInstance().znajdzPokoje(uzytkownik,hotelOld);
+        usunHotel(hotelOld);
+        addHotel(uzytkownik,hotel);
+        ObjectPokojRepository.getInstance().dodajHotel(hotel,pokoje);
+    }
+
+    //todo ogarniecie rezerwacji
+    @Override
+    public void usunHotel(Hotel hotel) {
+        ObjectPokojRepository.getInstance().usunHotel(hotel);
+        hotele.remove(hotel);
     }
 
     public static ObjectHotelRepository getInstance() {
