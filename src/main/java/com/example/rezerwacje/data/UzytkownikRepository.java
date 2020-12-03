@@ -12,5 +12,5 @@ public interface UzytkownikRepository{
 
     void addUzytkownik(Uzytkownik uzytkownik);
 
-    void addPracownik(Uzytkownik pracownik, Uzytkownik kierownik, Hotel hotel);
+    void addPracownik(Uzytkownik pracownik, Uzytkownik kierownik);
 }

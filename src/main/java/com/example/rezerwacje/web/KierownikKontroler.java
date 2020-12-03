@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/kierownik")
@@ -45,7 +46,7 @@ public class KierownikKontroler {
 
         Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
 
-        return hotelRepository.znajdzHotele(kierownik.getId());
+        return hotelRepository.znajdzHotele(kierownik);
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -86,7 +87,7 @@ public class KierownikKontroler {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/hotele")
-    public List<Pokoj> listaPokoi(){
+    public Set<Pokoj> listaPokoi(Hotel hotel){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
         if(principal instanceof UserDetails){
@@ -98,7 +99,7 @@ public class KierownikKontroler {
         Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
 
         //todo logika wyboru hotelu
-        return pokojRepository.znajdzPokoje(kierownik);
+        return pokojRepository.znajdzPokoje(kierownik,hotel);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/hotel")

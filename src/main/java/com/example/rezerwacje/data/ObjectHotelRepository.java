@@ -2,27 +2,34 @@ package com.example.rezerwacje.data;
 
 import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
+import com.example.rezerwacje.uzytkownik.Uzytkownik;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ObjectHotelRepository implements HotelRepository{
     private static ObjectHotelRepository hotel_instance = null; //todo zmienic na bean
 
-    private final Map<Integer,Hotel> hotele = new HashMap<>();
+    // hotel, kierownik
+    private final Map<Hotel, Uzytkownik> hotele = new HashMap<>();
 
-    public List<Hotel> znajdzHotele(int id){
-        return null;
-    }
+    public List<Hotel> znajdzHotele(Uzytkownik uzytkownik){
+        List<Hotel> hotelList = new ArrayList<>();
+        for (Hotel hotel : hotele.keySet()){
+            if (hotele.get(hotel).equals(uzytkownik)){
+                hotelList.add(hotel);
+            }
+        }
 
-    public Map<Hotel, List<Pokoj>> znajdzOferty(){
-        return null;
+        return hotelList;
     }
 
     @Override
-    public Hotel znajdzHotel(int id) {
-        return hotele.get(id);
+    public Hotel znajdzHotelPracownika(Uzytkownik pracownik) {
+        for (Hotel hotel : hotele.keySet()){
+            if (hotele.get(hotel).equals(KierownikTable.getInstance().getKierownik(pracownik)))
+                return hotel;
+        }
+        return null;
     }
 
     public static ObjectHotelRepository getInstance() {

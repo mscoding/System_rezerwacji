@@ -23,4 +23,8 @@ public class Hotel {
     public int getId() {
         return id;
     }
+
+    public String getAdres() {
+        return adres;
+    }
 }

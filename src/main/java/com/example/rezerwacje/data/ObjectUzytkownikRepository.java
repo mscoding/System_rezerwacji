@@ -27,14 +27,14 @@ public class ObjectUzytkownikRepository implements UzytkownikRepository {
     public void addUzytkownik(Uzytkownik uzytkownik) {
         uzytkownik.setId(id);
         if (uzytkownik.getRola().equals("KIEROWNIK"))
-            KierownikTable.getInstance().addKierownik(id);
+            KierownikTable.getInstance().addKierownik(uzytkownik);
         uzytkownicy.put(id,uzytkownik);
         id++;
     }
 
     @Override
-    public void addPracownik(Uzytkownik pracownik, Uzytkownik kierownik, Hotel hotel) {
-        PracownikTable.getInstace().addPracownik(id, kierownik.getId(),hotel.getId());
+    public void addPracownik(Uzytkownik pracownik, Uzytkownik kierownik) {
+        KierownikTable.getInstance().addPracownik(kierownik, pracownik);
         addUzytkownik(pracownik);
     }
 

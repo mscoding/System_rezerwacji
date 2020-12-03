@@ -1,13 +1,11 @@
 package com.example.rezerwacje.data;
 
 import com.example.rezerwacje.hotel.Hotel;
-import com.example.rezerwacje.hotel.Pokoj;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ObjectRezerwacjaRepository implements RezerwacjaRepository{
     private static ObjectRezerwacjaRepository rezerwacja_instance = null;   //todo zmienic na bean
@@ -30,8 +28,7 @@ public class ObjectRezerwacjaRepository implements RezerwacjaRepository{
     @Override
     public List<Rezerwacja> znajdzRezerwacjePracownik(Uzytkownik pracownik) {
         return znajdzRezerwacje(ObjectHotelRepository.getInstance()
-                .znajdzHotel(PracownikTable.getInstace()
-                        .getHotelId(pracownik.getId())));
+                .znajdzHotelPracownika(pracownik));
     }
 
     public Rezerwacja usunRezerwacje(Rezerwacja rezerwacja){
