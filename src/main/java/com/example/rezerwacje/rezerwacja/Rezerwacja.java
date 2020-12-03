@@ -23,4 +23,8 @@ public class Rezerwacja {
         this.pokoj = pokoj;
         terminRezerwacji = new Date[2];
     }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
 }

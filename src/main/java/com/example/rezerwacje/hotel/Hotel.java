@@ -3,14 +3,14 @@ package com.example.rezerwacje.hotel;
 public class Hotel {
     private String nazwa;
     private String adres;
-    private long id;
+    private int id;
 
     public Hotel(String nazwa, String adres) {
         this.nazwa = nazwa;
         this.adres = adres;
     }
 
-    public Hotel(String nazwa, String adres, long id) {
+    public Hotel(String nazwa, String adres, int id) {
         this.nazwa = nazwa;
         this.adres = adres;
         this.id = id;
@@ -18,5 +18,9 @@ public class Hotel {
 
     public String getNazwa() {
         return nazwa;
+    }
+
+    public int getId() {
+        return id;
     }
 }

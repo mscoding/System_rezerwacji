@@ -1,10 +1,9 @@
 package com.example.rezerwacje.web;
 
-import com.example.rezerwacje.data.JdbcRezerwacja;
-import com.example.rezerwacje.data.JdbcUzytkownicy;
+import com.example.rezerwacje.data.ObjectRezerwacjaRepository;
+import com.example.rezerwacje.data.ObjectUzytkownikRepository;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
-import com.example.rezerwacje.uzytkownik.Pracownik;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -16,14 +15,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/pracownik")
 public class PracownikKontroler {
-    private JdbcRezerwacja jdbcRezerwacja;
-    private JdbcUzytkownicy jdbcUzytkownicy;
+    private ObjectRezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
+    private ObjectUzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
 
-    @Autowired
-    public PracownikKontroler(JdbcRezerwacja jdbcRezerwacja, JdbcUzytkownicy jdbcUzytkownicy) {
-        this.jdbcRezerwacja = jdbcRezerwacja;
-        this.jdbcUzytkownicy = jdbcUzytkownicy;
-    }
+//    @Autowired
+//    public PracownikKontroler(ObjectRezerwacjaRepository jdbcRezerwacjaRepository, ObjectUzytkownikRepository jdbcUzytkownikRepository) {
+//        this.jdbcRezerwacjaRepository = jdbcRezerwacjaRepository;
+//        this.jdbcUzytkownikRepository = jdbcUzytkownikRepository;
+//    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Rezerwacja> oknoGlowne(){
@@ -35,9 +34,9 @@ public class PracownikKontroler {
             username = principal.toString();
         }
 
-        Pracownik pracownik = (Pracownik) jdbcUzytkownicy.znajdzUzytkownika(username);
+        Uzytkownik pracownik = uzytkownikRepository.znajdzUzytkownika(username);
 
-        return jdbcRezerwacja.znajdzRezerwacje(pracownik.getHotel());
+        return rezerwacjaRepository.znajdzRezerwacjePracownik(pracownik);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -53,7 +52,7 @@ public class PracownikKontroler {
 
     @RequestMapping(method = RequestMethod.POST, value = "/rezerwacja")
     public String oplacRezerwacje(Rezerwacja rezerwacja){
-        jdbcRezerwacja.usunRezerwacje(rezerwacja);
+        rezerwacjaRepository.usunRezerwacje(rezerwacja);
         platnosc(rezerwacja);
 
         return "redirect:/pracownik";

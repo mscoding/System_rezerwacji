@@ -1,15 +1,13 @@
 package com.example.rezerwacje.web;
 
-import com.example.rezerwacje.data.JdbcHotel;
-import com.example.rezerwacje.data.JdbcPokoj;
-import com.example.rezerwacje.data.JdbcRezerwacja;
-import com.example.rezerwacje.data.JdbcUzytkownicy;
+import com.example.rezerwacje.data.ObjectHotelRepository;
+import com.example.rezerwacje.data.ObjectPokojRepository;
+import com.example.rezerwacje.data.ObjectRezerwacjaRepository;
+import com.example.rezerwacje.data.ObjectUzytkownikRepository;
 import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
-import com.example.rezerwacje.uzytkownik.Kierownik;
-import com.example.rezerwacje.uzytkownik.Pracownik;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -22,18 +20,18 @@ import java.util.List;
 @Controller
 @RequestMapping("/kierownik")
 public class KierownikKontroler {
-    private JdbcUzytkownicy jdbcUzytkownicy;
-    private JdbcHotel jdbcHotel;
-    private JdbcPokoj jdbcPokoj;
-    private JdbcRezerwacja jdbcRezerwacja;
+    private ObjectUzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
+    private ObjectHotelRepository hotelRepository = ObjectHotelRepository.getInstance();
+    private ObjectPokojRepository pokojRepository = ObjectPokojRepository.getInstance();
+    private ObjectRezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
 
-    @Autowired
-    public KierownikKontroler(JdbcUzytkownicy jdbcUzytkownicy, JdbcHotel jdbcHotel, JdbcPokoj jdbcPokoj, JdbcRezerwacja jdbcRezerwacja) {
-        this.jdbcUzytkownicy = jdbcUzytkownicy;
-        this.jdbcHotel = jdbcHotel;
-        this.jdbcPokoj = jdbcPokoj;
-        this.jdbcRezerwacja = jdbcRezerwacja;
-    }
+//    @Autowired
+//    public KierownikKontroler(ObjectUzytkownikRepository jdbcUzytkownikRepository, ObjectHotelRepository objectHotelRepository, ObjectPokojRepository jdbcPokojRepository, ObjectRezerwacjaRepository jdbcRezerwacjaRepository) {
+//        this.jdbcUzytkownikRepository = jdbcUzytkownikRepository;
+//        this.objectHotelRepository = objectHotelRepository;
+//        this.jdbcPokojRepository = jdbcPokojRepository;
+//        this.jdbcRezerwacjaRepository = jdbcRezerwacjaRepository;
+//    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Hotel> ekranGlownyHotele(){
@@ -45,13 +43,13 @@ public class KierownikKontroler {
             username = principal.toString();
         }
 
-        Kierownik kierownik = (Kierownik) jdbcUzytkownicy.znajdzUzytkownika(username);
+        Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
 
-        return jdbcHotel.znajdzHotele(kierownik.getId());
+        return hotelRepository.znajdzHotele(kierownik.getId());
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Pracownik> ekranGlownyPracownicy(){
+    public List<Uzytkownik> ekranGlownyPracownicy(){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
         if(principal instanceof UserDetails){
@@ -60,9 +58,9 @@ public class KierownikKontroler {
             username = principal.toString();
         }
 
-        Kierownik kierownik = (Kierownik) jdbcUzytkownicy.znajdzUzytkownika(username);
+        Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
 
-        return jdbcUzytkownicy.znajdzPracownikow(kierownik.getId());
+        return uzytkownikRepository.znajdzPracownikow(kierownik.getId());
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -73,19 +71,18 @@ public class KierownikKontroler {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/hotele")
-    public List<Rezerwacja> listaRezerwacji(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if(principal instanceof UserDetails){
-            username = ((UserDetails)principal).getUsername();
-        }else{
-            username = principal.toString();
-        }
+    public List<Rezerwacja> listaRezerwacji(Hotel hotel){
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String username;
+//        if(principal instanceof UserDetails){
+//            username = ((UserDetails)principal).getUsername();
+//        }else{
+//            username = principal.toString();
+//        }
+//
+//        Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
 
-        Kierownik kierownik = (Kierownik) jdbcUzytkownicy.znajdzUzytkownika(username);
-
-        //todo logika wyboru hotelu
-        return jdbcRezerwacja.znajdzRezerwacje(kierownik.wybierzHotel(1));
+        return rezerwacjaRepository.znajdzRezerwacje(hotel);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/hotele")
@@ -98,10 +95,10 @@ public class KierownikKontroler {
             username = principal.toString();
         }
 
-        Kierownik kierownik = (Kierownik) jdbcUzytkownicy.znajdzUzytkownika(username);
+        Uzytkownik kierownik = uzytkownikRepository.znajdzUzytkownika(username);
 
         //todo logika wyboru hotelu
-        return jdbcPokoj.znajdzPokoje(kierownik);
+        return pokojRepository.znajdzPokoje(kierownik);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/hotel")

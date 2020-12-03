@@ -1,7 +1,7 @@
 package com.example.rezerwacje.uzytkownik;
 
-public abstract class Uzytkownik {
-    private long id;
+public class Uzytkownik {
+    private int id;
 
     private String nazwa;
 
@@ -13,7 +13,7 @@ public abstract class Uzytkownik {
 
     private String rola;
 
-    public Uzytkownik(long id, String nazwa, String haslo, String imie, String nazwisko, String rola) {
+    public Uzytkownik(int id, String nazwa, String haslo, String imie, String nazwisko, String rola) {
         this.id = id;
         this.nazwa = nazwa;
         this.haslo = haslo;
@@ -30,11 +30,11 @@ public abstract class Uzytkownik {
         this.rola = rola;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
