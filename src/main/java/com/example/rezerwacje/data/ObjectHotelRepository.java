@@ -2,6 +2,7 @@ package com.example.rezerwacje.data;
 
 import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
+import com.example.rezerwacje.rezerwacja.Rezerwacja;
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
 
 import java.util.*;
@@ -39,27 +40,33 @@ public class ObjectHotelRepository implements HotelRepository{
         hotele.put(hotel,kierownik);
     }
 
-    //todo ogarniecie rezerwacji
     @Override
     public void modyfikujHotel(Hotel hotel) {
         Hotel hotelOld=null;
-        Uzytkownik uzytkownik=null;
+        Uzytkownik kierownik=null;
         for (Hotel hotel1 : hotele.keySet()){
             if (hotel1.getId()==hotel.getId()) {
-                uzytkownik = hotele.get(hotel1);
+                kierownik = hotele.get(hotel1);
                 hotelOld = hotel1;
             }
         }
-        Set<Pokoj> pokoje = ObjectPokojRepository.getInstance().znajdzPokoje(uzytkownik,hotelOld);
+        Set<Pokoj> pokoje = ObjectPokojRepository.getInstance().znajdzPokoje(kierownik,hotelOld);
+        Map<Uzytkownik,List<Rezerwacja>> rezerwacje = ObjectRezerwacjaRepository.getInstance().modyfikujHotel(hotelOld);
+        ObjectRezerwacjaRepository.getInstance().usunHotel(hotelOld);
+        for (Uzytkownik uzytkownik : rezerwacje.keySet()){
+            for (Rezerwacja rezerwacja : rezerwacje.get(uzytkownik)){
+                ObjectRezerwacjaRepository.getInstance().dodajRezerwacje(rezerwacja,uzytkownik);
+            }
+        }
         usunHotel(hotelOld);
-        addHotel(uzytkownik,hotel);
+        addHotel(kierownik,hotel);
         ObjectPokojRepository.getInstance().dodajHotel(hotel,pokoje);
     }
 
-    //todo ogarniecie rezerwacji
     @Override
     public void usunHotel(Hotel hotel) {
         ObjectPokojRepository.getInstance().usunHotel(hotel);
+        ObjectRezerwacjaRepository.getInstance().usunHotel(hotel);
         hotele.remove(hotel);
     }
 

@@ -48,9 +48,9 @@ public class ObjectPokojRepository implements PokojRepository{
         pokoje.put(pokoj, hotel);
     }
 
-    //todo ogarniecie rezerwacji
     @Override
     public void usunPokoj(Pokoj pokoj) {
+        ObjectRezerwacjaRepository.getInstance().usunPokoj(pokoj);
         pokoje.remove(pokoj);
     }
 

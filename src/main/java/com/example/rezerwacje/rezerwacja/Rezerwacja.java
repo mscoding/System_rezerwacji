@@ -27,4 +27,8 @@ public class Rezerwacja {
     public Hotel getHotel() {
         return hotel;
     }
+
+    public Pokoj getPokoj() {
+        return pokoj;
+    }
 }
