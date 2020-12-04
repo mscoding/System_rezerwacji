@@ -2,6 +2,8 @@ package com.example.rezerwacje.web;
 
 import com.example.rezerwacje.data.ObjectRezerwacjaRepository;
 import com.example.rezerwacje.data.ObjectUzytkownikRepository;
+import com.example.rezerwacje.data.RezerwacjaRepository;
+import com.example.rezerwacje.data.UzytkownikRepository;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
 import com.example.rezerwacje.uzytkownik.Uzytkownik;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,8 +17,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/pracownik")
 public class PracownikKontroler {
-    private ObjectRezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
-    private ObjectUzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
+    private RezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
+    private UzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
 
 //    @Autowired
 //    public PracownikKontroler(ObjectRezerwacjaRepository jdbcRezerwacjaRepository, ObjectUzytkownikRepository jdbcUzytkownikRepository) {

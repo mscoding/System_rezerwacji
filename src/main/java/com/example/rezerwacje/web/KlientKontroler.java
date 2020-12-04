@@ -23,7 +23,7 @@ public class KlientKontroler {
     private HotelRepository hotelRepository = ObjectHotelRepository.getInstance();
     private RezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
     private PokojRepository pokojRepository = ObjectPokojRepository.getInstance();
-    private ObjectUzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
+    private UzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
 
 //    @Autowired
 //    public KlientKontroler(ObjectHotelRepository hotelRepository, ObjectRezerwacjaRepository jdbcRezerwacjaRepository) {   //todo

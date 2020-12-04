@@ -1,9 +1,6 @@
 package com.example.rezerwacje.web;
 
-import com.example.rezerwacje.data.ObjectHotelRepository;
-import com.example.rezerwacje.data.ObjectPokojRepository;
-import com.example.rezerwacje.data.ObjectRezerwacjaRepository;
-import com.example.rezerwacje.data.ObjectUzytkownikRepository;
+import com.example.rezerwacje.data.*;
 import com.example.rezerwacje.hotel.Hotel;
 import com.example.rezerwacje.hotel.Pokoj;
 import com.example.rezerwacje.rezerwacja.Rezerwacja;
@@ -21,10 +18,10 @@ import java.util.Set;
 @Controller
 @RequestMapping("/kierownik")
 public class KierownikKontroler {
-    private ObjectUzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
-    private ObjectHotelRepository hotelRepository = ObjectHotelRepository.getInstance();
-    private ObjectPokojRepository pokojRepository = ObjectPokojRepository.getInstance();
-    private ObjectRezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
+    private UzytkownikRepository uzytkownikRepository = ObjectUzytkownikRepository.getInstance();
+    private HotelRepository hotelRepository = ObjectHotelRepository.getInstance();
+    private PokojRepository pokojRepository = ObjectPokojRepository.getInstance();
+    private RezerwacjaRepository rezerwacjaRepository = ObjectRezerwacjaRepository.getInstance();
 
 //    @Autowired
 //    public KierownikKontroler(ObjectUzytkownikRepository jdbcUzytkownikRepository, ObjectHotelRepository objectHotelRepository, ObjectPokojRepository jdbcPokojRepository, ObjectRezerwacjaRepository jdbcRezerwacjaRepository) {
