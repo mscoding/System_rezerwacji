@@ -8,8 +8,6 @@ public class Pokoj {
     private int cena;
     private int ocena;
     private int liczbaOsob;
-    private Date poczatekRezerwacji;
-    private Date koniecRezerwacji;
 
     public Pokoj(int nr, int cena, int ocena, int liczbaOsob) {
         this.nr = nr;
@@ -24,22 +22,6 @@ public class Pokoj {
         this.cena = cena;
         this.ocena = ocena;
         this.liczbaOsob = liczbaOsob;
-    }
-
-    public Date getPoczatekRezerwacji() {
-        return poczatekRezerwacji;
-    }
-
-    public void setPoczatekRezerwacji(Date poczatekRezerwacji) {
-        this.poczatekRezerwacji = poczatekRezerwacji;
-    }
-
-    public Date getKoniecRezerwacji() {
-        return koniecRezerwacji;
-    }
-
-    public void setKoniecRezerwacji(Date koniecRezerwacji) {
-        this.koniecRezerwacji = koniecRezerwacji;
     }
 
     public int getId() {
